@@ -30,7 +30,7 @@ const Sidebar = () => {
                             <AiFillHome />
                         </p>
                         <span className="text-xl hidden xl:block">
-                            For You
+                            Para Ti
                         </span>
                         </div>
                     </Link>
