@@ -7,9 +7,12 @@ import { GoogleLogin, googleLogout } from '@react-oauth/google'
 import { BiSearch } from 'react-icons/bi';
 import { IoMdAdd } from 'react-icons/io';
 import Logo from '../utils/tiktik-logo.png'
+import { createOrGetUser } from '../utils';
+
+import useAtuhStore from '../store/authStore';
 
 const Navbar = () => {
-    const user = false;
+    const { userProfile, addUser, removeUser } = useAtuhStore();
 
     return (
         <div className="w-full flex justify-between items-center border-b-2 bprder-gray-200 py-2 px-4">
@@ -24,13 +27,33 @@ const Navbar = () => {
               </div>
           </Link>
 
-          <div>SEARCH</div>
+          <div>BUSCAR</div>
 
           <div>
-            {user ? (
-              <div>Logged in</div>
+            {userProfile ? (
+              <div className="flex ga[-5 md:gap-10">
+                <Link href="/upload">
+                  <button className="border-2 px-2 md:px-4 text-md font-semibold flex items-center gap-2">
+                    <IoMdAdd className="text-xl"/> {` `}
+                    <span className="hidden md:block">Upload</span>
+                  </button>
+                </Link>
+                {userProfile.image && (
+                   <Link href="/">
+                   <>
+                       <Image width={40} height={40} className="rounded-full cursor-pointer" src={userProfile.image} alt="profile photo" />
+                   </>
+               </Link>
+                )}
+                <button type="button" className="px-2" onClick={() => {
+                  googleLogout();
+                  removeUser();
+                }}>
+                  <AiOutlineLogout color="red" fontSize={21}/>
+                </button>
+              </div>
             ) : <GoogleLogin  
-                onSuccess={(response) => {console.log(response)}} 
+                onSuccess={(response) => createOrGetUser(response, addUser)} 
                 onError={() => console.log('Error')}/>}
           </div>
         </div>
